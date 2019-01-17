@@ -73,7 +73,7 @@ namespace eco
 // RESULT
 // Error status
 */
-int getFeatureMaps(const IplImage *image, const int k,
+int getFeatureMaps(const cv::Mat *image, const int k,
                    CvLSVMFeatureMapCaskade **map)
 {
     int sizeX, sizeY;
@@ -85,13 +85,13 @@ int getFeatureMaps(const IplImage *image, const int k,
     int ch;
     float magnitude, x, y, tx, ty;
 
-    IplImage *dx, *dy;
+    cv::Mat *dx, *dy;
     int *nearest;
     float *w, a_x, b_x;
 
     float kernel[3] = {-1.f, 0.f, 1.f};            // difference filter
-    CvMat kernel_dx = cvMat(1, 3, CV_32F, kernel); // 1 x 3
-    CvMat kernel_dy = cvMat(3, 1, CV_32F, kernel); // 3 x 1
+    cv::Mat kernel_dx = cv::Mat(1, 3, CV_32F, kernel); // 1 x 3
+    cv::Mat kernel_dy = cv::Mat(3, 1, CV_32F, kernel); // 3 x 1
 
     float *r;  // magnitude
     int *alfa; // orientation
@@ -101,15 +101,25 @@ int getFeatureMaps(const IplImage *image, const int k,
     float max, dotProd;
     int maxi;
 
-    height = image->height;
-    width = image->width;
+    height = image->rows;
+    width = image->cols;
 
-    numChannels = image->nChannels;
+    numChannels = image->channels();
 
-    dx = cvCreateImage(cvSize(image->width, image->height),
-                       IPL_DEPTH_32F, 3); // single-precision floating-point, 3 channels
-    dy = cvCreateImage(cvSize(image->width, image->height),
-                       IPL_DEPTH_32F, 3);
+    /*
+    dx = cv::createImage(cv::Size(image->cols, image->rows),
+                       CV_32F, 3); // single-precision floating-point, 3 channels
+    dy = cv::createImage(cv::Size(image->cols, image->rows),
+                       CV_32F, 3);
+                       */
+    int sz[3] = {image->cols, image->rows, 3};
+    cv::Mat M(3,sz, CV_8UC(3), Scalar::all(0));
+    cv::Mat L(3,sz, CV_8UC(3), Scalar::all(0));
+    dx = &M;
+    dy = &L;
+
+    // dx = cv::Mat::create(image->cols, image->rows, CV_32F(3));
+    // dy = cv::Mat::create(image->cols, image->rows, CV_32F(3));
 
     sizeX = width / k;
     sizeY = height / k;
@@ -118,8 +128,8 @@ int getFeatureMaps(const IplImage *image, const int k,
     stringSize = sizeX * p;
     allocFeatureMapObject(map, sizeX, sizeY, p);
 
-    cvFilter2D(image, dx, &kernel_dx, cvPoint(-1, 0));
-    cvFilter2D(image, dy, &kernel_dy, cvPoint(0, -1));
+    cv::filter2D(*image, *dx, CV_32F, kernel_dx, cv::Point(-1, 0));
+    cv::filter2D(*image, *dy, CV_32F, kernel_dy, cv::Point(0, -1));
 
     float arg_vector;
     for (i = 0; i <= NUM_SECTOR; i++)
@@ -134,8 +144,8 @@ int getFeatureMaps(const IplImage *image, const int k,
 
     for (j = 1; j < height - 1; j++)
     {
-        datadx = (float *)(dx->imageData + dx->widthStep * j);
-        datady = (float *)(dy->imageData + dy->widthStep * j);
+        datadx = (float *)(dx->data + dx->step * j);
+        datady = (float *)(dy->data + dy->step * j);
         for (i = 1; i < width - 1; i++)
         {
             c = 0;
@@ -257,9 +267,6 @@ int getFeatureMaps(const IplImage *image, const int k,
             }     /*for(ii = 0; ii < k; ii++)*/
         }         /*for(j = 1; j < sizeX - 1; j++)*/
     }             /*for(i = 1; i < sizeY - 1; i++)*/
-
-    cvReleaseImage(&dx);
-    cvReleaseImage(&dy);
 
     free(w);
     free(nearest);

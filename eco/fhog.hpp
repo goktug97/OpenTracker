@@ -50,7 +50,9 @@
 
 #include <stdio.h>
 
-#include <opencv2/imgproc.hpp>
+#include "opencv2/imgproc.hpp"
+
+using namespace cv;
 
 namespace eco
 {
@@ -120,7 +122,7 @@ typedef struct
 // RESULT
 // Error status
 */
-int getFeatureMaps(const IplImage *image, const int k,
+int getFeatureMaps(const cv::Mat *image, const int k,
                    CvLSVMFeatureMapCaskade **map);
 
 /*

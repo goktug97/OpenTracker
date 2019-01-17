@@ -1,5 +1,7 @@
 #include "eco.hpp"
 
+using namespace cv;
+
 namespace eco
 {
 void ECO::init(cv::Mat &im, const cv::Rect2f &rect, const eco::EcoParameters &paramters)
@@ -625,15 +627,15 @@ bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 
 		if (scores.get_max_score() < params_.max_score_threshhold)
 		{
-			cvWaitKey(0);
+      cv::waitKey(0);
 		}
 
-		int c = cvWaitKey(1);
+		int c = cv::waitKey(1);
 		if (c != -1)
 			c = c % 256;
 		if (c == 27)
 		{
-			cvDestroyWindow("OpenTracker");
+      cv::destroyWindow("OpenTracker");
 			exit(1);
 		}
 		//cv::waitKey(0);
@@ -1107,9 +1109,9 @@ ECO_FEATS ECO::interpolate_dft(const ECO_FEATS &xlf, vector<cv::Mat> &interp1_fs
 	for (size_t i = 0; i < xlf.size(); i++)
 	{
 		cv::Mat interp1_fs_mat =
-			subwindow(interp1_fs[i], cv::Rect(cv::Point(0, 0), cv::Size(interp1_fs[i].rows, interp1_fs[i].rows)), IPL_BORDER_REPLICATE);
+			subwindow(interp1_fs[i], cv::Rect(cv::Point(0, 0), cv::Size(interp1_fs[i].rows, interp1_fs[i].rows)), cv::BORDER_REPLICATE);
 		cv::Mat interp2_fs_mat =
-			subwindow(interp2_fs[i], cv::Rect(cv::Point(0, 0), cv::Size(interp2_fs[i].cols, interp2_fs[i].cols)), IPL_BORDER_REPLICATE);
+			subwindow(interp2_fs[i], cv::Rect(cv::Point(0, 0), cv::Size(interp2_fs[i].cols, interp2_fs[i].cols)), cv::BORDER_REPLICATE);
 		vector<cv::Mat> temp;
 
 		for (size_t j = 0; j < xlf[i].size(); j++)
@@ -1202,9 +1204,9 @@ ECO_FEATS ECO::shift_sample(ECO_FEATS &xf,
 		assert(0);
 		*/
 		cv::Mat shift_exp_y_mat =
-			subwindow(shift_exp_y, cv::Rect(cv::Point(0, 0), xf[i][0].size()), IPL_BORDER_REPLICATE);
+			subwindow(shift_exp_y, cv::Rect(cv::Point(0, 0), xf[i][0].size()), cv::BORDER_REPLICATE);
 		cv::Mat shift_exp_x_mat =
-			subwindow(shift_exp_x, cv::Rect(cv::Point(0, 0), xf[i][0].size()), IPL_BORDER_REPLICATE);
+			subwindow(shift_exp_x, cv::Rect(cv::Point(0, 0), xf[i][0].size()), cv::BORDER_REPLICATE);
 
 		vector<cv::Mat> tmp;
 		for (size_t j = 0; j < xf[i].size(); j++) // for each dimension of the feature, do complex element-wise multiplication

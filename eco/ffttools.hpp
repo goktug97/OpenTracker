@@ -36,7 +36,8 @@ the use of this software, even if advised of the possibility of such damage.
 #ifndef FFTTOOLS_HPP
 #define FFTTOOLS_HPP
 
-#include <opencv2/imgproc/imgproc.hpp>
+//#include <opencv2/imgproc/imgproc.hpp>
+#include "opencv2/imgproc.hpp"
 #include "debug.hpp"
 /*
 #ifdef USE_CUDA

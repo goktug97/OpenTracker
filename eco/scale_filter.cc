@@ -177,7 +177,7 @@ cv::Mat ScaleFilter::extract_scale_sample(const cv::Mat &im, const cv::Point2f &
         cv::Point pos2(pos.x - floor((patch_sz.width + 1) / 2),
                        pos.y - floor((patch_sz.height + 1) / 2));
 
-        cv::Mat im_patch = subwindow(new_im, cv::Rect(pos2, patch_sz), IPL_BORDER_REPLICATE);
+        cv::Mat im_patch = subwindow(new_im, cv::Rect(pos2, patch_sz), cv::BORDER_REPLICATE);
 
         cv::Mat im_patch_resized;
         if (im_patch.cols == 0 || im_patch.rows == 0)
