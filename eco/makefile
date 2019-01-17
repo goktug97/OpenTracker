@@ -3,10 +3,10 @@ USE_CUDA=0
 #0:no-simd;1:sse-Intel;2:neon-TX2;3:neon-Raspberrypi3
 #(comment should not in the same line as the parameter)
 USE_SIMD=0
-USE_MULTI_THREAD=0
+USE_MULTI_THREAD=1
 USE_FFTW=0
-#USE_OPENMP=1
-#USE_EIGEN=1
+USE_OPENMP=1
+USE_EIGEN=1
 USE_GTEST=0
 USE_VOT_TRAX=0
 
@@ -19,8 +19,8 @@ ARCH= -gencode arch=compute_30,code=sm_30 \
       -gencode arch=compute_50,code=[sm_50,compute_50] \
       -gencode arch=compute_52,code=[sm_52,compute_52]
 
-LDFLAGS= `pkg-config --libs opencv` -lstdc++ -lm 
-CXXFLAGS = -g -Wall `pkg-config --cflags opencv` -lstdc++ -lm -std=c++0x -O3 -fPIC 
+LDFLAGS= `pkg-config --cflags --libs opencv` -lstdc++ -lm -pthread
+CXXFLAGS = -g -Wall `pkg-config --libs --cflags opencv` -lstdc++ -lm -std=c++0x -O3 -fPIC 
 HEADERS = $(wildcard *.h) $(wildcard *.hpp)
 TARGET_LIB = libecotracker.so
 OBJS = ffttools.o fhog.o interpolator.o optimize_scores.o scale_filter.o \
@@ -65,14 +65,14 @@ CXXFLAGS+= -DUSE_FFTW
 LDFLAGS+= -lfftw3
 endif
 
-#ifeq ($(USE_OPENMP), 1)
-#CXXFLAGS+= -DUSE_OPENMP -fopenmp
-#LDFLAGS+= -fopenmp
-#endif
+ifeq ($(USE_OPENMP), 1)
+CXXFLAGS+= -DUSE_OPENMP -fopenmp
+LDFLAGS+= -fopenmp
+endif
 
-#ifeq ($(USE_EIGEN), 1)
-#CXXFLAGS+= -DUSE_EIGEN -I/usr/include/eigen3
-#endif
+ifeq ($(USE_EIGEN), 1)
+CXXFLAGS+= -DUSE_EIGEN -I/usr/include/eigen3
+endif
 
 ifeq ($(USE_GTEST), 1)
 GTEST_DIR = ../googletest

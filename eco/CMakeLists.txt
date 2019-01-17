@@ -7,6 +7,8 @@ SET(CMAKE_CXX_FLAGS "-std=c++11 -O3 -pthread")
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
+message("${OpenCV_LIBS}")
+
 file(GLOB eco_srcs
 	${CMAKE_CURRENT_LIST_DIR}/*.hpp
 	${CMAKE_CURRENT_LIST_DIR}/*.h
