@@ -3,9 +3,9 @@
 #include <string>
 #include <opencv2/opencv.hpp>
 
-#include "opentracker/eco/eco.hpp"
-#include "opentracker/eco/parameters.hpp"
-#include "opentracker/kcf/kcftracker.hpp"
+#include "eco/eco.hpp"
+#include "eco/parameters.hpp"
+//#include "opentracker/kcf/kcftracker.hpp"
 
 using namespace std;
 using namespace cv;
@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     std::string path;
     ifstream *groundtruth;
     ostringstream osfile;
-    path = "../sequences/Crossing";
+    path = "../../sequences/Crossing";
     fstream gt(path + "/groundtruth_rect.txt");
     string tmp;
     size_t index = 1;
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     cout << osfile.str() << endl;
     // Ini bounding box and frame
     Rect2f bboxGroundtruth(x, y, w, h);
-    cv::Mat frame = cv::imread(osfile.str().c_str(), CV_LOAD_IMAGE_UNCHANGED);
+    cv::Mat frame = cv::imread(osfile.str().c_str(), cv::IMREAD_UNCHANGED);
     cv::Mat frameDraw;
     frame.copyTo(frameDraw);
     if (!frame.data)
@@ -77,18 +77,18 @@ int main(int argc, char **argv)
     //parameters.max_score_threshhold = 0.15;
     // if you use cn feature, need to add these two lines:
     parameters.useCnFeature = true;
-    parameters.cn_features.fparams.tablename = "/usr/local/include/opentracker/eco/look_tables/CNnorm.txt";
+    parameters.cn_features.fparams.tablename = "/home/goktug/OpenTracker/eco/look_tables/CNnorm.txt";
     ecotracker.init(frame, ecobbox, parameters);
     // Initialize KCF tracker========================================  
-    bool HOG = true, FIXEDWINDOW = true, MULTISCALE = true, LAB = true, DSST = false; //LAB color space features
-    kcf::KCFTracker kcftracker(HOG, FIXEDWINDOW, MULTISCALE, LAB, DSST);
-    Rect2d kcfbbox((int)bboxGroundtruth.x, (int)bboxGroundtruth.y, (int)bboxGroundtruth.width, (int)bboxGroundtruth.height);
-    kcftracker.init(frame, kcfbbox);
+    //bool HOG = true, FIXEDWINDOW = true, MULTISCALE = true, LAB = true, DSST = false; //LAB color space features
+    //kcf::KCFTracker kcftracker(HOG, FIXEDWINDOW, MULTISCALE, LAB, DSST);
+    //Rect2d kcfbbox((int)bboxGroundtruth.x, (int)bboxGroundtruth.y, (int)bboxGroundtruth.width, (int)bboxGroundtruth.height);
+    //kcftracker.init(frame, kcfbbox);
     // Initialize DSST tracker========================================  
-    DSST = true;
-    kcf::KCFTracker dssttracker(HOG, FIXEDWINDOW, MULTISCALE, LAB, DSST);
-    Rect2d dsstbbox((int)bboxGroundtruth.x, (int)bboxGroundtruth.y, (int)bboxGroundtruth.width, (int)bboxGroundtruth.height);
-    dssttracker.init(frame, dsstbbox);
+    //DSST = true;
+    //kcf::KCFTracker dssttracker(HOG, FIXEDWINDOW, MULTISCALE, LAB, DSST);
+    //Rect2d dsstbbox((int)bboxGroundtruth.x, (int)bboxGroundtruth.y, (int)bboxGroundtruth.width, (int)bboxGroundtruth.height);
+    //dssttracker.init(frame, dsstbbox);
     //===============================================================   
 
     while (frame.data)
@@ -108,6 +108,7 @@ int main(int argc, char **argv)
         }
         
         // Update KCF tracker=======================================
+        /*
         bool okkcf = kcftracker.update(frame, kcfbbox);
         if (okkcf)
         {
@@ -130,22 +131,22 @@ int main(int argc, char **argv)
             putText(frameDraw, "DSST tracking failure detected", cv::Point(10, 100), FONT_HERSHEY_SIMPLEX,
                     0.75, Scalar(0, 0, 255), 2);
         }
-
+        */
         // Draw ground truth box
-        rectangle(frameDraw, bboxGroundtruth, Scalar(0, 0, 0), 2, 1);
+        //rectangle(frameDraw, bboxGroundtruth, Scalar(0, 0, 0), 2, 1);
 
         // ShowImage
-        imshow("OpenTracker", frameDraw);
+        imshow("cvwindow", frameDraw);
 
-        int c = cvWaitKey(1);
+        int c = cv::waitKey(1);
         if (c != -1)
             c = c % 256;
         if (c == 27)
         {
-            cvDestroyWindow("OpenTracker");
+          cv::destroyWindow("cvwindow");
             return 0;
         }
-        waitKey(1);
+        cv::waitKey(1);
 
         // Read next image
         f++;
@@ -161,13 +162,13 @@ int main(int argc, char **argv)
         //cout << f << " " << x << " " << y << " " << w << " " << h << " " << isLost << endl;
         // Read images in a folder
         osfile << path << "/img/" << setw(4) << setfill('0') << f << ".jpg";
-        cout << osfile.str() << endl;
+        // cout << osfile.str() << endl;
 
         bboxGroundtruth.x = x;
         bboxGroundtruth.y = y;
         bboxGroundtruth.width = w;
         bboxGroundtruth.height = h;
-        frame = cv::imread(osfile.str().c_str(), CV_LOAD_IMAGE_UNCHANGED);
+        frame = cv::imread(osfile.str().c_str(), cv::IMREAD_UNCHANGED);
         if (!frame.data)
         {
             break;

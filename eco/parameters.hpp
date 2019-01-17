@@ -139,7 +139,7 @@ struct EcoParameters
 	bool useDeepFeature = false;
 	bool useHogFeature = true;
 	bool useColorspaceFeature = false;// not implemented yet
-	bool useCnFeature = false;
+	bool useCnFeature = true;
 	bool useIcFeature = true;
 
 #ifdef USE_CAFFE
@@ -242,7 +242,7 @@ struct EcoParameters
 	bool debug = 0; // to show heatmap or not
 
 	// GPU
-	bool use_gpu = true; // whether Caffe use gpu or not
+	bool use_gpu = false; // whether Caffe use gpu or not
 	int gpu_id = 0;
 };
 } // namespace eco

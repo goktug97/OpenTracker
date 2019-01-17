@@ -50,3 +50,6 @@ build/
 *.toc
 *.synctex.gz
 *~
+
+test*
+model

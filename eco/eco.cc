@@ -417,6 +417,7 @@ bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 		}
 	}
 	//debug("scores_fs_sum: %lu, %d x %d", scores_fs_sum.size(), scores_fs_sum[0].rows, scores_fs_sum[0].cols);
+	// printf("scores_fs_sum: %lu, %d x %d \n", scores_fs_sum.size(), scores_fs_sum[0].rows, scores_fs_sum[0].cols);
 
 	// 7: Calculate score by inverse DFT and
 	// 8: Optimize the continuous score function with Newton's method.
@@ -567,6 +568,7 @@ bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 		cm_tmp = magnitude(scores_sum[scale_change_factor]) * 1000;
 		cm_tmp.convertTo(cm_tmp, CV_8U);
 
+
 		cv::resize(cm_tmp, cm_img,
 				   cv::Size(cm_tmp.cols * resize_scores_width,
 							cm_tmp.rows * resize_scores_height),
@@ -623,8 +625,9 @@ bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 		cv::circle(resframe, pos_, 5, cv::Scalar(0, 255, 0));
 		cv::circle(resframe, sample_pos, 5, cv::Scalar(0, 255, 225));
 
-		cv::imshow("OpenTracker", resframe);
+		cv::imshow("cv2window", resframe);
 
+    // printf("Max Score:%f\n", scores.get_max_score());
 		if (scores.get_max_score() < params_.max_score_threshhold)
 		{
       cv::waitKey(0);
@@ -635,7 +638,7 @@ bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 			c = c % 256;
 		if (c == 27)
 		{
-      cv::destroyWindow("OpenTracker");
+      cv::destroyWindow("cv2window");
 			exit(1);
 		}
 		//cv::waitKey(0);
