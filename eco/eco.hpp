@@ -45,7 +45,7 @@ class ECO
 
 	void init(cv::Mat &im, const cv::Rect2f &rect, const eco::EcoParameters &paramters); 
 
-	bool update(const cv::Mat &frame, cv::Rect2f &roi);
+  std::tuple<bool, float> update(const cv::Mat &frame, cv::Rect2f &roi);
 	
 	void init_parameters(const eco::EcoParameters &parameters);
 

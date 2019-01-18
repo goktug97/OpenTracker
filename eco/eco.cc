@@ -364,7 +364,7 @@ void ECO::init(cv::Mat &im, const cv::Rect2f &rect, const eco::EcoParameters &pa
 	debug("==================End of Init===============================");
 }
 
-bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
+std::tuple<bool, float> ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 {
 	//**************************************************************************
 	//*****                     Localization
@@ -382,7 +382,7 @@ bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 	{
 		//print too much will cause VOT_Trax fail.
 		//debug("Feature window is zero.");
-		return false;
+		return std::make_tuple(false, 0.0);
 	}
 	//debug("xt size: %lu, %lu, %d x %d", xt.size(), xt[0].size(), xt[0][0].rows, xt[0][0].cols);
 
@@ -655,11 +655,11 @@ bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 	//printf("max_score: %f\n", scores.get_max_score());
 	if (scores.get_max_score() >= params_.max_score_threshhold)
 	{
-		return true, scores.get_max_score();
+		return std::make_tuple(true, scores.get_max_score());
 	}
 	else
 	{
-		return false, scores.get_max_score();
+		return std::make_tuple(false, scores.get_max_score());
 	}
 }
 

@@ -293,7 +293,7 @@ int main(int argc, char **argv)
         timereco = (double)getTickCount();
         bool okeco;
         float max_score;
-        okeco, max_score = ecotracker.update(frame, ecobbox);
+        tie(okeco, max_score) = ecotracker.update(frame, ecobbox);
         float fpseco = getTickFrequency() / ((double)getTickCount() - timereco);
         if (okeco)
         {

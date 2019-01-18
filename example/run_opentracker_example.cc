@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     cout << "Bounding box:" << x << " " << y << " " << w << " " << h << " " << endl;
     // Read images in the folder
     osfile << path << "/img/" << setw(4) << setfill('0') << f << ".jpg";
-    cout << osfile.str() << endl;
+    // cout << osfile.str() << endl;
     // Ini bounding box and frame
     Rect2f bboxGroundtruth(x, y, w, h);
     cv::Mat frame = cv::imread(osfile.str().c_str(), cv::IMREAD_UNCHANGED);
@@ -96,7 +96,11 @@ int main(int argc, char **argv)
         frame.copyTo(frameDraw); 
         
         // Update ECO tracker=======================================
-        bool okeco = ecotracker.update(frame, ecobbox);
+        double timereco = (double)getTickCount();
+        bool okeco;
+        float max_score;
+        okeco, max_score = ecotracker.update(frame, ecobbox);
+        float fpseco = getTickFrequency() / ((double)getTickCount() - timereco);
         if (okeco)
         {
             rectangle(frameDraw, ecobbox, Scalar(255, 0, 255), 2, 1); //blue
@@ -134,6 +138,11 @@ int main(int argc, char **argv)
         */
         // Draw ground truth box
         //rectangle(frameDraw, bboxGroundtruth, Scalar(0, 0, 0), 2, 1);
+
+        ostringstream os; 
+        os << float(fpseco); 
+        putText(frameDraw, "FPS: " + os.str(), Point(100, 30), FONT_HERSHEY_SIMPLEX,
+                0.75, Scalar(255, 0, 255), 2);
 
         // ShowImage
         imshow("cvwindow", frameDraw);
