@@ -19,8 +19,8 @@ ARCH= -gencode arch=compute_30,code=sm_30 \
       -gencode arch=compute_50,code=[sm_50,compute_50] \
       -gencode arch=compute_52,code=[sm_52,compute_52]
 
-LDFLAGS= `pkg-config --cflags --libs opencv` -lstdc++ -lm -pthread
-CXXFLAGS = -g -Wall `pkg-config --libs --cflags opencv` -lstdc++ -lm -std=c++0x -O3 -fPIC 
+LDFLAGS= `pkg-config --libs opencv` -lstdc++ -lm -pthread
+CXXFLAGS = -g -Wall `pkg-config --cflags opencv` -lstdc++ -lm -std=c++0x -O3 -fPIC 
 HEADERS = $(wildcard *.h) $(wildcard *.hpp)
 TARGET_LIB = libecotracker.so
 OBJS = ffttools.o fhog.o interpolator.o optimize_scores.o scale_filter.o \

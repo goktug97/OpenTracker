@@ -291,7 +291,9 @@ int main(int argc, char **argv)
     {
         frame.copyTo(frameDraw); // only copy can do the real copy, just equal not.
         timereco = (double)getTickCount();
-        bool okeco = ecotracker.update(frame, ecobbox);
+        bool okeco;
+        float max_score;
+        okeco, max_score = ecotracker.update(frame, ecobbox);
         float fpseco = getTickFrequency() / ((double)getTickCount() - timereco);
         if (okeco)
         {

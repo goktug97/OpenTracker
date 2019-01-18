@@ -655,11 +655,11 @@ bool ECO::update(const cv::Mat &frame, cv::Rect2f &roi)
 	//printf("max_score: %f\n", scores.get_max_score());
 	if (scores.get_max_score() >= params_.max_score_threshhold)
 	{
-		return true;
+		return true, scores.get_max_score();
 	}
 	else
 	{
-		return false;
+		return false, scores.get_max_score();
 	}
 }
 
