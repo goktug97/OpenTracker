@@ -3,6 +3,12 @@
     <img src="images/Opentracker.png", width="480">
 </p>
 
+# If you get undefined errors you can try this repo
+I've just fixed the eco tracker, I haven't used other trackers so they are same as original repo.
+I've also added max\_score return to the update function.
+if makefile can't find opencv, I added example pkgconfig file which you
+can put to the /usr/share/pkgconfig folder. Other than that you should follow the original intructions.
+
 # What is OpenTracker?
 OpenTracker is a open sourced repository for Visual Tracking. It's written in C++, high speed, easy to use, and easy to be implemented in embedded system.
 ```diff

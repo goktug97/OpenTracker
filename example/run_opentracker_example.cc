@@ -99,7 +99,7 @@ int main(int argc, char **argv)
         double timereco = (double)getTickCount();
         bool okeco;
         float max_score;
-        okeco, max_score = ecotracker.update(frame, ecobbox);
+        std::tie(okeco, max_score) = ecotracker.update(frame, ecobbox);
         float fpseco = getTickFrequency() / ((double)getTickCount() - timereco);
         if (okeco)
         {
